@@ -1,0 +1,87 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\yarn\bin\yarn.js info postcss-pxtorem --json
+
+PATH: 
+  f:\neng\game\lyq5655779.WebLipstick\trunk\buy\node_modules\.bin;f:\neng\game\lyq5655779.WebLipstick\trunk\node_modules\.bin;f:\neng\game\lyq5655779.WebLipstick\node_modules\.bin;f:\neng\game\node_modules\.bin;f:\neng\node_modules\.bin;f:\node_modules\.bin;C:\Program Files\nodejs;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\Git\cmd;C:\Users\neng\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Redis;C:\Program Files\Tesseract-OCR;C:\Python27;C:\Python27\Scripts;C:\Program Files\Microsoft VS Code\bin;E:\mongodb\bin;C:\Program Files\Android\Android Studio\jre\bin;C:\Users\neng\AppData\Local\Android\Sdk\platform-tools;C:\Users\neng\AppData\Local\Android\Sdk\tools;;C:\Program Files\Microsoft VS Code\bin;C:\Users\neng\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Tesseract-OCR
+
+Yarn version: 
+  1.10.1
+
+Node version: 
+  8.9.4
+
+Platform: 
+  win32 x64
+
+Trace: 
+  TypeError: Cannot convert undefined or null to object
+      at keys (<anonymous>)
+      at Object.<anonymous> (C:\Users\neng\AppData\Roaming\nvm\v8.9.4\node_modules\yarn\lib\cli.js:79338:59)
+      at Generator.next (<anonymous>)
+      at step (C:\Users\neng\AppData\Roaming\nvm\v8.9.4\node_modules\yarn\lib\cli.js:98:30)
+      at C:\Users\neng\AppData\Roaming\nvm\v8.9.4\node_modules\yarn\lib\cli.js:109:13
+      at <anonymous>
+      at process._tickCallback (internal/process/next_tick.js:188:7)
+
+npm manifest: 
+  {
+    "name": "buy",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+      "serve": "vue-cli-service serve",
+      "build": "vue-cli-service build",
+      "lint": "vue-cli-service lint"
+    },
+    "dependencies": {
+      "autoprefixer": "^9.4.6",
+      "less": "^3.9.0",
+      "less-loader": "^4.1.0",
+      "n-zepto": "^1.2.0",
+      "postcss-pxtorem": "^4.0.1",
+      "vant": "^1.5.5",
+      "vue": "^2.5.21",
+      "vue-router": "^3.0.1",
+      "vuex": "^3.0.1"
+    },
+    "devDependencies": {
+      "@vue/cli-plugin-babel": "^3.3.0",
+      "@vue/cli-plugin-eslint": "^3.3.0",
+      "@vue/cli-service": "^3.3.0",
+      "babel-eslint": "^10.0.1",
+      "babel-plugin-import": "^1.11.0",
+      "eslint": "^5.8.0",
+      "eslint-plugin-vue": "^5.0.0",
+      "vue-template-compiler": "^2.5.21"
+    },
+    "eslintConfig": {
+      "root": true,
+      "env": {
+        "node": true
+      },
+      "extends": [
+        "plugin:vue/essential",
+        "eslint:recommended"
+      ],
+      "rules": {},
+      "parserOptions": {
+        "parser": "babel-eslint"
+      }
+    },
+    "postcss": {
+      "plugins": {
+        "autoprefixer": {}
+      }
+    },
+    "browserslist": [
+      "> 1%",
+      "last 2 versions",
+      "not ie <= 8"
+    ]
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
