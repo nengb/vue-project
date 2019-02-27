@@ -2,14 +2,16 @@
 class ServerConfig{
     constructor(){
         //连接服务器的请求地址
-  
+     
+
+        this.ip='115.451.15.154';  //假ip地址
 
         this.loca_key = '!@$%&S&@'
         
-        // this.httpAddress=`http://${this.ip}:9001`
+        this.httpAddress=`http://${this.ip}:9001`
 
         //使用mock模拟数据
-        this.httpAddress = 'mock'
+        // this.httpAddress = 'mock'
 
 
         //socket
