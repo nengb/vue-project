@@ -1,62 +1,129 @@
 
 <template>
-  <div class="page has-navbar"   style='transition:none !important'>
+  <div
+    class="page has-navbar"
+    style="transition:none !important"
+  >
     <van-nav-bar
       title="我的背包"
       fixed
       border
       left-arrow
-       @click-left="onClickLeft"
+      @click-left="onClickLeft"
     >
-    <span class="add-address-btn" slot="right" v-on:click="switchAll()">{{allSwitch?'全不选':'全选'}}</span>
+      <span
+        slot="right"
+        class="add-address-btn"
+        @click="switchAll()"
+      >
+        {{ allSwitch?'全不选':'全选' }}
+      </span>
     </van-nav-bar>
-    <div class="page-content text-center " >
-      <div class='mybag'>
+    <div class="page-content text-center ">
+      <div class="mybag">
         <div class="head-info">
           <div class="user-info">
-            <div class="user-img"> <img src="http://h5.wjwlddz.com:9001/image?url=http%3A%2F%2Fthirdwx.qlogo.cn%2Fmmopen%2Fvi_32%2FQ0j4TwGTfTIowbz5xxVOJdbK5QqOHQ9ia4VCro19twhPiby3mECL0ib23iaVP8cicKOz2EEYuf34sss4ZYHjzg0J6ibA%2F132.jpg" alt="" width="100%" height="100%"> </div>
-            <div class="user-name"> 能 </div>
+            <div class="user-img">
+              <img
+                :src="user.headimg"
+                alt=""
+                width="100%"
+                height="100%"
+              >
+            </div>
+            <div class="user-name">
+              {{ user.name }}
+            </div>
           </div>
           <div class="user-score">
-            我的积分:0
+            我的积分:{{ user.score }}
           </div>
         </div>
 
-         <van-pull-refresh v-model="isLoading" @refresh="onRefresh" pulling-text=" " loosing-text = ' ' loading-text=' '>
+        <van-pull-refresh
+          v-model="isLoading"
+          pulling-text=" "
+          loosing-text=" "
+          loading-text=" "
+          @refresh="onRefresh"
+        >
           <div class="shopList">
-            <div class="shopListItem" v-for="(item,index) in shopList"  v-on:click="changeSwitch(item)">
-              <div class="switch-icon"><img :src="item.switchState?require('../../static/image/web/switch1-active.png'):require('../../static/image/web/switch1.png')" alt=""  width="100%" height="100%"></div>
-              <div class="shopImg"><img :src="item.img" alt="" width="100%" height="100%"></div>
+            <div
+              v-for="(item,index) in shopList"
+              :key="index"
+              class="shopListItem"
+              @click="changeSwitch(item)"
+            >
+              <div class="switch-icon">
+                <img
+                  :src="item.switchState?require('../../static/image/web/switch1-active.png'):require('../../static/image/web/switch1.png')"
+                  alt=""
+                  width="100%"
+                  height="100%"
+                  
+                >
+              </div>
+              <div class="shopImg">
+                <img
+                  alt=""
+                  width="100%"
+                  height="100%"
+                  v-lazy="item.img"
+
+                >
+              </div>
               <div class="shopInfo">
-                  <div class="shopName">{{item.name}}</div>
-                  <div class="shopChangeScore">{{item.change_score}}积分x1</div>
+                <div class="shopName">
+                  {{ item.name }}
+                </div>
+                <div class="shopChangeScore">
+                  {{ item.change_score }}积分x1
+                </div>
               </div>
               <div class="shopNum">
-                <div class="num">x{{item.total-item.change_num}}</div>
-                <div class="allScore">总：{{(item.total-item.change_num)*item.change_score}}分</div>
+                <div class="num">
+                  x{{ item.total-item.change_num }}
+                </div>
+                <div class="allScore">
+                  总：{{ (item.total-item.change_num)*item.change_score }}分
+                </div>
               </div>
             </div>
           </div>
-          </van-pull-refresh>
+          <div
+            v-show="shopList.length == 0"
+            class="loading"
+          >
+            <van-loading v-show="loadingIcon" /> <span class="loadin-text">
+              {{ loadText }}
+            </span>
+          </div>
+        </van-pull-refresh>
 
-        <div class="mybag-btn" v-on:click="sendGood()">发货</div>
-
+        <div
+          class="mybag-btn"
+          @click="sendGood()"
+        >
+          发货
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
 
-  import get from '../services/get';
-  import { NavBar, Toast, PullRefresh  } from 'vant';
+  import HttpGet from '../services/get';
+  import { NavBar, Toast, PullRefresh,Loading  } from 'vant';
   import serverConfig from '../configs/serverConfig';
   let { genQueryString, getQueryStringArgsAes } = serverConfig;
+  import wechat from '../configs/wechat';
 
   export default {
     components: {
       [NavBar.name]:NavBar,
       [Toast.name]:Toast,
       [PullRefresh.name]:PullRefresh,
+      [Loading.name]:Loading,
     },
     data () {
       
@@ -64,13 +131,23 @@
         shopList:[],
         allSwitch:false,
         isLoading:false,
+        user:{},
+        loadText:'正在加载',
+        loadingIcon:true,
       }
     },
     async created(){
-      let get_my_wawa = await get.get_my_wawa({game_type:14});
+      this.user = wechat.getUserData();
+
+      this.loadingIcon = true;
+
+      let get_my_wawa = await HttpGet.get_my_wawa({game_type:14});
       if(get_my_wawa && get_my_wawa.data){
         this.shopList = get_my_wawa.data;
       }
+
+      this.loadText = '暂无数据'
+      this.loadingIcon = false;
     
     },
 
@@ -117,6 +194,7 @@
 .van-nav-bar .van-icon{
   color: #fff
 }
+
  
 .mybag{
   margin-top: 46px;
@@ -171,6 +249,7 @@
         width: 44px;
         height: 44px;
         margin: 0 7px 0 11px;
+
       }
       .shopInfo{
         text-align: left;

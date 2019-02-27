@@ -1,38 +1,40 @@
 
 <template>
-  <div class="page has-navbar"   style='transition:none !important'>
+  <div
+    class="page has-navbar"
+    style="transition:none !important"
+  >
     <van-nav-bar
       :title="addressAdd?'添加收货地址':'修改收货地址'"
       fixed
       border
       left-arrow
-       @click-left="onClickLeft"
-       @click-right="onClickRight"
+      @click-left="onClickLeft"
+      @click-right="onClickRight"
     >
     <!-- <span class="add-address-btn" slot="right">保存</span> -->
     </van-nav-bar>
-    <div class="page-content text-center " >
-      <div class='myaddressadd'>
-          <van-address-edit
-            :area-list="areaList"
-            :show-delete="!addressAdd"
-            :address-info="addressInfo"
-            show-set-default
-            show-search-result
-            :is-saving="isSaving"
-            :is-deleting="isDeleting"
-            :search-result="searchResult"
-            @save="onSave"
-            @delete="onDelete"
-          />
-
+    <div class="page-content text-center ">
+      <div class="myaddressadd">
+        <van-address-edit
+          :area-list="areaList"
+          :show-delete="!addressAdd"
+          :address-info="addressInfo"
+          show-set-default
+          show-search-result
+          :is-saving="isSaving"
+          :is-deleting="isDeleting"
+          :search-result="searchResult"
+          @save="onSave"
+          @delete="onDelete"
+        />
       </div>
     </div>
   </div>
 </template>
 <script>
 
-  import get from '../services/get';
+  import HttpGet from '../services/get';
   import { NavBar,AddressEdit,Toast  } from 'vant';
   import areaList from '../configs/area';
   import serverConfig from '../configs/serverConfig';
@@ -58,11 +60,11 @@
       }
     },
     beforeMount(){
-      console.log("beforeMount")
+      // console.log("beforeMount")
 
     },
     async created(){
-      console.log("created")
+      // console.log("created")
 
       // this.areaList = areaList;
       let { addressInfo } = getQueryStringArgsAes()
@@ -111,21 +113,21 @@
         this.$router.push();
       },
       async onSave(e) {
-        console.log(e)
+        // console.log(e)
         let { name, tel, addr_id, address, addressDetail, city, county, province,isDefault,areaCode } = e;
         this.isSaving = true;
         let addressDe = addressDetail.split('_');
         addressDe = addressDe[addressDe.length-1];
         
         let operateName = addr_id?'update_address':'add_address';
-        let update_address = await get[operateName]({
+        let update_address = await HttpGet[operateName]({
           name,
           tel,
           addrid:addr_id,
           addr:`${province} ${city} ${county}_${addressDe}/${areaCode}`
         })
         if(isDefault){
-          await get.set_addr_default({
+          await HttpGet.set_addr_default({
             addrid:addr_id,
           })
         }
@@ -135,12 +137,12 @@
 
       },
       async onDelete(e) {
-        console.log(e)
+        // console.log(e)
         let { name, tel, addr_id, address, addressDetail, city, county, province } = e;
 
         this.isDeleting = true;
 
-        let delete_address = await get.delete_address({
+        let delete_address = await HttpGet.delete_address({
           addrid:addr_id,
         })
         this.isDeleting = false;

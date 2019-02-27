@@ -1,17 +1,24 @@
 
 <template>
-    <van-tabbar v-bind:value="active"  active-color="#ff4600" change="change">
-        
-        <van-tabbar-item v-for="(item,index) in myTabbar" :to="item.router" change="change"> 
-        <span>{{item.text}}</span>
-        <img
-            slot="icon"
-            slot-scope="props"
-            :src="props.active ? item.icon.active : item.icon.normal"
-        >
-        </van-tabbar-item>
-
-    </van-tabbar>
+  <van-tabbar
+    :value="active"
+    active-color="#ff4600"
+    change="change"
+  >
+    <van-tabbar-item
+      v-for="(item,index) in myTabbar"
+      :key="index"
+      :to="item.router"
+      change="change"
+    > 
+      <span>{{ item.text }}</span>
+      <img
+        slot="icon"
+        slot-scope="props"
+        :src="props.active ? item.icon.active : item.icon.normal"
+      >
+    </van-tabbar-item>
+  </van-tabbar>
 </template>
 <script>
 import { Tabbar, TabbarItem } from 'vant';
@@ -19,6 +26,9 @@ import { Tabbar, TabbarItem } from 'vant';
     components:{
         [Tabbar.name]:Tabbar,
         [TabbarItem.name]:TabbarItem,
+    },
+    props:{
+        active:Number,
     },
     data () {
       return {
@@ -51,13 +61,9 @@ import { Tabbar, TabbarItem } from 'vant';
 
     methods:{
         change(){
-            console.log(2342342343423)
         }
     
    
-    },
-    props:{
-        active:Number,
     }
 
 

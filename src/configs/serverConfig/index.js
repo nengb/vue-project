@@ -2,9 +2,13 @@
 class ServerConfig{
     constructor(){
         //连接服务器的请求地址
-        this.ip = '47.97.32.55' ;	 //测试服务器
-        this.ip = '118.178.178.152' ;	 //口红
-        // this.ip = window.location.hostname;  //从浏览器拿ip
+        let ip = '47.97.32.55' ;	 //测试服务器
+         ip = '118.178.178.152' ;	 //口红
+         ip = '47.110.65.173' ;	 //商城
+
+        this.ip = process.env.NODE_ENV == 'production'?window.location.hostname:ip;  //从浏览器拿ip
+
+        this.ip = '118.178.178.152';  //从浏览器拿ip
 
         this.loca_key = '!@$%&S&@'
 

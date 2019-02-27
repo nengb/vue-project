@@ -1,70 +1,105 @@
 
 <template>
-    
-    <div class='records'>
-        <div class="conData">
-            <div class="conDataScroll"> 
-
-                <van-tabs 
-                    v-model="active"
-                    swipeable
-                    animated
-                    v-on:change="vTabsChange"
+  <div class="records">
+    <div class="conData">
+      <div class="conDataScroll">
+        <van-tabs 
+          v-model="active"
+          swipeable
+          animated
+          @change="vTabsChange"
+        >
+          <van-tab
+            v-for="(items,index) in list"
+            :key="index"
+            :title="index == 0?'抽奖记录':'礼盒记录'"
+          >
+            <van-pull-refresh
+              v-model="isLoading"
+              pulling-text=" "
+              loosing-text=" "
+              loading-text=" "
+              @refresh="onRefresh"
+            >
+              <div class="con">
+                <div
+                  v-for="(item,i) in showList"
+                  :key="i"
+                  class="conItem"
                 >
-                    <van-tab v-for="(items,index) in list" :title="index == 0?'抽奖记录':'礼盒记录'" >
-                            <van-pull-refresh v-model="isLoading" @refresh="onRefresh" pulling-text=" " loosing-text = ' ' loading-text=' '>
-                                
-                                <div class="con" >
-                                    <div class="conItem" v-for="item in showList">
-                                        <div class="img"><img :src="item.headimg" alt="" width="100%" height="100%"></div>
-                                        <div class="right">
-                                            <div class="info">
-                                                <div class="name">{{item.name}}</div>
-                                                <div class="time">{{item.formatTime}}</div>
-                                            </div>
-                                            <div class="msg">
-                                                <div class="img"><img :src="item.good_img" alt="" width="100%" height="100%"></div>
-                                                <div class="name">{{item.good_name}}</div>
+                  <div class="img">
+                    <img
+                      alt=""
+                      width="100%"
+                      height="100%"
+                      v-lazy="item.headimg"
+                      
+                    >
+                  </div>
+                  <div class="right">
+                    <div class="info">
+                      <div class="name">
+                        {{ item.name }}
+                      </div>
+                      <div class="time">
+                        {{ item.formatTime }}
+                      </div>
+                    </div>
+                    <div class="msg">
+                      <div class="img">
+                        <img
+                          alt=""
+                          width="100%"
+                          height="100%"
+                          v-lazy="item.good_img"
 
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                            </van-pull-refresh>
-
-
-                    </van-tab>
-                </van-tabs>
-
+                        >
+                      </div>
+                      <div class="name">
+                        {{ item.good_name }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </van-pull-refresh>
+                            
+            <div
+              v-show="showList.length == 0"
+              class="loading"
+            >
+              <van-loading v-show="loadingIcon" /> <span class="loadin-text">
+                {{ loadText }}
+              </span>
             </div>
-
-        </div>
-
-        <div class="pageInfo">
-            <div class="pageNum">
-                <span>第{{listPage[active]}}页/</span>
-                <span>{{list[active]?list[active][0].pageSize:1}}行记录</span>
-            </div>
-            <div class="pageBtn">
-                <div v-on:click="pagePrev">上一页</div>
-                <div v-on:click="pageFirst">首页</div>
-                <div v-on:click="pageNext">下一页</div>
-            </div>
-
-        </div>
-
-
-
-
+          </van-tab>
+        </van-tabs>
+      </div>
     </div>
+
+    <div class="pageInfo">
+      <div class="pageNum">
+        <span>第{{ listPage[active] }}页/</span>
+        <span>{{ list[active]?list[active][0].pageSize:1 }}行记录</span>
+      </div>
+      <div class="pageBtn">
+        <div @click="pagePrev">
+          上一页
+        </div>
+        <div @click="pageFirst">
+          首页
+        </div>
+        <div @click="pageNext">
+          下一页
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 
-  import get from '../services/get';
-  import { NavBar, List, Tab, Tabs, PullRefresh,Toast    } from 'vant';
+  import HttpGet from '../services/get';
+  import { NavBar, List, Tab, Tabs, PullRefresh,Toast,Loading     } from 'vant';
   import serverConfig from '../configs/serverConfig';
   let { genQueryString, getQueryStringArgsAes,formatTime } = serverConfig;
 
@@ -76,11 +111,12 @@
       [Tabs.name]:Tabs,
       [PullRefresh.name]:PullRefresh,
       [Toast.name]:Toast,
+      [Loading.name]:Loading,
     },
     data () {
       
       return {
-        list:{
+        list:{0:[{}],1:[{}]
         },
         active:0,
         loading:false,
@@ -89,6 +125,8 @@
         isLoading:false,
         listPage:[1,1],
         showList:[],
+        loadText:'正在加载',
+        loadingIcon:true,
 
       }
     },
@@ -111,16 +149,19 @@
       },
       //加载更多数据
       async loadMoreData(class_id,initPage){
+          
         let page = initPage?1:this.list[class_id][0].page+1;
         let records_type = class_id == 1?0:1;
        
         if(this.list[class_id] && this.list[class_id].finished){
           return;
         }
+        this.loadingIcon=true;
+
         if(page>1){
             this.list[class_id][0].page++;
         }
-        let getData = await get.get_luckybag_records({apiService:'lottery',records_type,page});
+        let getData = await HttpGet.get_luckybag_records({apiService:'lottery',records_type,page});
         if(getData && getData.data && getData.data.length>0){
           getData.data.map(e=>{
             e.formatTime = formatTime(new Date(e.time));
@@ -141,12 +182,18 @@
             if(!this.list[class_id]){
               this.list[class_id] = [{}];
             }
-            this.$set(this.list[class_id][0],'finished',true)
+            this.$set(this.list[class_id][0],'finished',true);
             this.loading=false;
             Toast('我是有底线的~')
         }else{
+            this.$set(this.list[class_id][0],'finished',true)
+            
+            this.loadText = '暂无数据'
             this.error = true;
+
         }
+        this.loadingIcon=false;
+
         this.reloadShowData()
 
 
@@ -160,8 +207,6 @@
 
       },
       onLoad(){
-        console.log("this.active")
-        console.log(this.active)
         this.loadMoreData(this.active);
       },
       onRefresh(){
@@ -171,7 +216,6 @@
         },10)
       },
       pagePrev(){
-          console.log(this.listPage[this.active] >1)
           if( this.listPage[this.active] >1){
             this.$set(this.listPage,this.active,this.listPage[this.active]-1);
           }
@@ -191,7 +235,6 @@
         this.$set(this.listPage,this.active,this.listPage[this.active]+1);
         
         this.reloadShowData()
-        console.log(this.listPage)
       }
 
     }
@@ -203,6 +246,7 @@
 .van-nav-bar .van-icon{
   color: #fff
 }
+
  
 .records{
 

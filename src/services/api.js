@@ -13,6 +13,18 @@ export const get = {
     get_score_classroom:'/get_score_classroom',  
        
     /**
+     * 抽奖
+     * @param type Number   抽奖类型（0：试玩，1：真实抽奖）
+     * @param luckybag_id Number   盒子类型（默认1）
+     * @param play_times Number   次数（数量）
+     * @param sign Number   游戏类型
+     */
+    get_luckybag:'/get_luckybag',  
+    /**
+     * 获取奖品库数据
+     */
+    get_lucky_bag_data_new:'/get_lucky_bag_data_new',  
+    /**
      * 获取抽奖记录
      * @param records_type Number   游戏类型
      */
@@ -66,6 +78,32 @@ export const get = {
      * 获取积分支出账单 
      */ 
     get_score_pay_bills:'/get_score_pay_bills',
+
+    /**
+     * 提交反馈
+     * @param mac_no       //手机信息
+     * @param msg          //反馈建议内容
+     * @param version      //应用版本号
+     * @param op           //系统 1：ios,0:android
+     */     
+    add_suggest:'/add_suggest',
+    /**
+     * 积分商城兑换
+     * @param gift_id       //商品id
+     * @param addrid        //地址id
+     * @param num           //数量
+     */ 
+    score_to_gift:'/score_to_gift',
+    /**
+     * 获取玩家信息 
+     */ 
+    get_user_info:'/get_user_info',
+     /**
+     * 积分兑奖商品记录 
+     */ 
+    get_change_gift_records:'/get_change_gift_records',
+
+
 
 
    

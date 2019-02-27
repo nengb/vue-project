@@ -1,41 +1,73 @@
 
 <template>
-  <div class="page has-navbar"   style='transition:none !important'>
+  <div
+    class="page has-navbar"
+    style="transition:none !important"
+  >
     <van-nav-bar
       title="确认订单"
       fixed
       border
       left-arrow
-       @click-left="onClickLeft"
+      @click-left="onClickLeft"
     />
-    <div class="page-content text-center " >
-      <div class='firmMyorder'>
+    <div class="page-content text-center ">
+      <div class="firmMyorder">
         <div class="head-info">
           <div class="addr-info">
-              <div class="addr-name">{{defaultAddr.name}}</div>
-              <div class="addr-detail">{{defaultAddr.addr}}</div>
+            <div class="addr-name">
+              {{ defaultAddr.name }}
             </div>
-          <div class="addr-tel">{{defaultAddr.tel}}</div>
-        </div>
-
-        <div class="goodList">
-          <div class="goodListItem" v-for="(item,index) in goodList">
-              <div class="goodImg"><img :src="item.img" alt="" width="100%" height="100%"></div>
-              <div class="goodInfo">{{item.name}}</div>
-              <div class="goodNum"><van-stepper v-model="item.changeTotal" :min="1" :max="item.total-item.change_num"/></div>
+            <div class="addr-detail">
+              {{ defaultAddr.addr }}
+            </div>
+          </div>
+          <div class="addr-tel">
+            {{ defaultAddr.tel }}
           </div>
         </div>
 
-        <div class="mybag-btn" v-on:click="sendGood()">确认发货</div>
+        <div class="goodList">
+          <div
+            v-for="(item,index) in goodList"
+            :key="index"
+            class="goodListItem"
+          >
+            <div class="goodImg">
+              <img
+                alt=""
+                width="100%"
+                height="100%"
+                v-lazy="item.img"
 
+              >
+            </div>
+            <div class="goodInfo">
+              {{ item.name }}
+            </div>
+            <div class="goodNum">
+              <van-stepper
+                v-model="item.changeTotal"
+                :min="1"
+                :max="item.total-item.change_num"
+              />
+            </div>
+          </div>
+        </div>
 
+        <div
+          class="mybag-btn"
+          @click="sendGood()"
+        >
+          确认发货
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
 
-  import get from '../services/get';
+  import HttpGet from '../services/get';
   import { NavBar,Stepper,Toast,Dialog    } from 'vant';
   import serverConfig from '../configs/serverConfig';
   let { genQueryString,getQueryStringArgsAes } = serverConfig;
@@ -68,12 +100,12 @@
 
       this.goodList = sendGoodList;
       
-      let get_default_addr = await get.get_default_addr();
+      let get_default_addr = await HttpGet.get_default_addr();
       if(get_default_addr && get_default_addr.data){
         get_default_addr.data.addr = get_default_addr.data.addr.replace(/\/[0-9]*$/,'');
         this.defaultAddr = get_default_addr.data;
       }
-      console.log(sendGoodList)
+      // console.log(sendGoodList)
 
     },
 
@@ -90,13 +122,13 @@
               num:e.changeTotal,
             });
         });
-        console.log(good_arr)
+        // console.log(good_arr)
         Dialog.confirm({
           title: '',
           message: '确定发货吗？'
         }).then(async () => {
           // on confirm
-          let wawa_to_user = await get.wawa_to_user({good_arr:JSON.stringify(good_arr),addrid,game_type:14})
+          let wawa_to_user = await HttpGet.wawa_to_user({good_arr:JSON.stringify(good_arr),addrid,game_type:14})
           if(wawa_to_user && wawa_to_user.errcode == 0){
             Toast.success(`发货成功`);
           }else{
@@ -165,6 +197,7 @@
         width: 44px;
         height: 44px;
         margin: 0 7px 0 0;
+
       }
       .goodInfo{
         max-width: 170px;

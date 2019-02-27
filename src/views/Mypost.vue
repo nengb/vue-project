@@ -1,6 +1,9 @@
 
 <template>
-  <div class="page has-navbar"   style='transition:none !important'>
+  <div
+    class="page has-navbar"
+    style="transition:none !important"
+  >
     <van-nav-bar
       title="查看物流"
       fixed
@@ -8,48 +11,58 @@
       left-arrow
       @click-left="onClickLeft"
     />
-    <div class="page-content text-center " >
-        <div class="mypost">
-            <div class="orderInfo">
-                <div class="info">
-                    <div>订单号：{{orderid}}</div>
-                    <div>{{post.com}}：{{post.num}}</div>
-                </div>
-                <div class="state">{{post.state}}</div>
-            </div>
-
-            <div class="postInfo">
-              <div class="addr">
-                <i></i>
-                <span>[收货地址]{{addr}}</span>
-              </div>
-
-              <div class="postList">
-                  <div class="postListItem" v-for="(item,index) in  post.data">
-                      <div class="time" :style="{color:post.state == '已签收' && index== 0 && '#eb8e3e'}">
-                        <div class="y-M-D">{{item.ftime.split(' ')[0]}}</div>
-                        <div class="H-M-S">{{item.ftime.split(' ')[1]}}</div>
-                      </div>
-                      <div class="info" :style="{color:post.state == '已签收' && index== 0 && '#eb8e3e'}"><i :class="{signIcon:(post.state == '已签收' && index== 0)}"></i>{{item.context}}</div>
-                  </div>
-
-              </div>
-
-            </div>
-
-
-
-
-
+    <div class="page-content text-center ">
+      <div class="mypost">
+        <div class="orderInfo">
+          <div class="info">
+            <div>订单号：{{ orderid }}</div>
+            <div>{{ post.com }}：{{ post.num }}</div>
+          </div>
+          <div class="state">
+            {{ post.state }}
+          </div>
         </div>
 
+        <div class="postInfo">
+          <div class="addr">
+            <i />
+            <span>[收货地址]{{ addr }}</span>
+          </div>
+
+          <div class="postList">
+            <div
+              v-for="(item,index) in post.data"
+              :key="index"
+              class="postListItem"
+            >
+              <div
+                class="time"
+                :style="{color:post.state == '已签收' && index== 0 && '#eb8e3e'}"
+              >
+                <div class="y-M-D">
+                  {{ item.ftime.split(' ')[0] }}
+                </div>
+                <div class="H-M-S">
+                  {{ item.ftime.split(' ')[1] }}
+                </div>
+              </div>
+              <div
+                class="info"
+                :style="{color:post.state == '已签收' && index== 0 && '#eb8e3e'}"
+              >
+                <i :class="{signIcon:(post.state == '已签收' && index== 0)}" />{{ item.context }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 <script>
 
-  import get from '../services/get';
+  import HttpGet from '../services/get';
   import { NavBar  } from 'vant';
   import serverConfig from '../configs/serverConfig';
   let { genQueryString, getQueryStringArgsAes,formatTime } = serverConfig;

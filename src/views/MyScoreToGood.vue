@@ -5,7 +5,7 @@
     style="transition:none !important"
   >
     <van-nav-bar
-      title="我的订单"
+      title="积分兑换商品记录"
       fixed
       border
       left-arrow
@@ -22,14 +22,14 @@
           >
             <div class="orderInfo">
               <div class="orderid">
-                订单编号：{{ item.ord_id }}
+                <span>物品名称：</span>{{ item.good_name }}
               </div>
               <div class="time">
-                下单时间：{{ item.formatTime }}
+                兑换时间：{{ item.formatTime }}
               </div>
             </div>
             <div class="information">
-              查看详情
+              {{ item.num }}积分
             </div>
           </div>
         </div>
@@ -69,8 +69,9 @@
     async created(){
       this.loadingIcon = true;
 
-      let get_order_list = await HttpGet.get_order_list();
+      let get_order_list = await HttpGet.get_change_gift_records();
       if(get_order_list && get_order_list.data){
+        get_order_list.data.reverse();
         get_order_list.data.map(e=>{
           e.formatTime = formatTime(new Date(e.time));
           return e;
@@ -89,10 +90,6 @@
         this.$router.back();
       },
       toOrderDetail(item){
-        let { ord_id,formatTime } = item;
-        // console.log(item)
-        let url = genQueryString('/mine/myorderdetail',{orderid:ord_id,formatOrderTime:formatTime})
-        this.$router.push(url);
 
       }
     }
@@ -114,14 +111,21 @@
         background: #fff;
         padding:14px ;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
         margin-top:4px;
         color: #393939;
        .orderInfo{
          text-align: left;
+         width: 75%;
           .orderid{
             font-size: 12px;
+            font-weight: normal;
+            span{
             font-weight: bold;
+              color: #b6271d;
+
+
+            }
           }
           .time{
             font-size: 12px;
@@ -131,6 +135,8 @@
        }
        .information{
          color: #b6271d;
+            color: #fc4700;
+
        }
      }
    }

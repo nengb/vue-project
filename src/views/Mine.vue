@@ -1,46 +1,68 @@
 
 <template>
-  <div class="page has-navbar"   style='transition:none !important'>
-    <div class=" text-center " >
-      <div class='mine'>
-
-            <div class="use-headimg"><img src="http://h5.wjwlddz.com:9001/image?url=http%3A%2F%2Fthirdwx.qlogo.cn%2Fmmopen%2Fvi_32%2FQ0j4TwGTfTIowbz5xxVOJdbK5QqOHQ9ia4VCro19twhPiby3mECL0ib23iaVP8cicKOz2EEYuf34sss4ZYHjzg0J6ibA%2F132.jpg" width="100%" height="100%" alt=""></div>
-            <div class="use-name">能</div>
-            <div class="mineItems">
-              <ul>
-
-                <li v-for="item in mineItems" v-on:click="goItem(item)">
-                  <div class="mineItems-left">
-                    <div class="mineItems-icon"><img  :src="item.icon" width="100%" alt=""></div>
-                    <span class="mineItems-text">{{item.text}}</span>
-                    <span v-if="item.id === 'score'" class="mineItems-num">31312</span>
-                  </div>
-                  <i></i>
-                </li>
-                
-              </ul>
-            </div>
+  <div
+    class="page has-navbar"
+    style="transition:none !important"
+  >
+    <div class=" text-center ">
+      <div class="mine">
+        <div class="use-headimg">
+          <img
+            :src="user.headimg"
+            width="100%"
+            height="100%"
+            alt=""
+          >
+        </div>
+        <div class="use-name">
+          {{ user.name }}
+        </div>
+        <div class="mineItems">
+          <ul>
+            <li
+              v-for="item in mineItems"
+              :key="item.id"
+              @click="goItem(item)"
+            >
+              <div class="mineItems-left">
+                <div class="mineItems-icon">
+                  <img
+                    :src="item.icon"
+                    width="100%"
+                    alt=""
+                  >
+                </div>
+                <span class="mineItems-text">
+                  {{ item.text }}
+                </span>
+                <span
+                  v-if="item.id === 'score'"
+                  class="mineItems-num"
+                >
+                  {{ user.score }}
+                </span>
+              </div>
+              <i />
+            </li>
+          </ul>
+        </div>
 
      
 
-        <my-tabbar v-bind:active=2 ></my-tabbar>
-
-
+        <my-tabbar :active="2" />
       </div>
     </div>
   </div>
 </template>
 <script>
 
-  import get from '../services/get';
   import MyTabbar from '@/components/Tabbar.vue'
-import { NavBar  } from 'vant';
+  import wechat from '../configs/wechat';
 
 
   export default {
     components: {
       MyTabbar,
-      [NavBar.name]:NavBar,
 
     },
     data () {
@@ -52,6 +74,18 @@ import { NavBar  } from 'vant';
             icon:require('../../static/image/web/icon-bag.png'),
             text:'我的背包',
             id:'bag'
+          },
+          {
+            url:'/myredpacket',
+            icon:require('../../static/image/web/icon-redpacket.png'),
+            text:'我的红包',
+            id:'redpacket'
+          },
+           {
+            url:'/certification',
+            icon:require('../../static/image/web/icon-redpacket.png'),
+            text:'实名认证',
+            id:'certification'
           },
           {
             url:'/mine/myaddress',
@@ -77,16 +111,16 @@ import { NavBar  } from 'vant';
             text:'联系客服',
             id:'customer'
           },
-          {
-            url:'/message',
-            icon:require('../../static/image/web/icon-message.png'),
-            text:'消息',
-            id:'message'
-          },
+          // {
+          //   url:'/message',
+          //   icon:require('../../static/image/web/icon-message.png'),
+          //   text:'消息',
+          //   id:'message'
+          // },
           {
             url:'/logout',
             icon:require('../../static/image/web/icon-logout.png'),
-            text:'退出登录',
+            text:'重新登录',
             id:'logout'
           },
         ]
@@ -94,6 +128,7 @@ import { NavBar  } from 'vant';
       }
     },
     async created(){
+      this.user = wechat.getUserData();
 
     
     },
@@ -101,8 +136,13 @@ import { NavBar  } from 'vant';
     methods:{
       
       goItem(obj){
-        console.log(obj)
-        this.$router.push(obj.url)
+        if(obj.id === 'logout'){
+          sessionStorage.clear();
+          this.$router.push('/');
+
+        }else{
+          this.$router.push(obj.url)
+        }
       }
 
     

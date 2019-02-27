@@ -1,44 +1,53 @@
 
 <template>
-  <div class="page has-navbar"   style='transition:none !important'>
+  <div
+    class="page has-navbar"
+    style="transition:none !important"
+  >
     <van-nav-bar
       title="地址管理"
       fixed
       border
       left-arrow
-       @click-left="onClickLeft"
-       @click-right="onClickRight"
+      @click-left="onClickLeft"
+      @click-right="onClickRight"
     >
-    <span class="add-address-btn" slot="right">添加</span>
+      <span
+        slot="right"
+        class="add-address-btn"
+      >
+        添加
+      </span>
     </van-nav-bar>
 
-    <div class="page-content text-center " >
-      <div class='myaddress'>
+    <div class="page-content text-center ">
+      <div class="myaddress">
         <van-address-list
           v-model="chosenAddressId"
           :list="list"
           @add="onAdd"
           @edit="onEdit"
+          @select="onSelect"
         >
         <!-- <span class="default_address" spot="top" v-bind:style="defaultIndex">默认</span> -->
         </van-address-list>
-
       </div>
     </div>
   </div>
 </template>
 <script>
 
-  import get from '../services/get';
-  import { NavBar,AddressList   } from 'vant';
+  import HttpGet from '../services/get';
+  import { NavBar,AddressList,Toast   } from 'vant';
   import serverConfig from '../configs/serverConfig';
-  let { genQueryString, getQueryStringArgsAes } = serverConfig;
+  let { genQueryString } = serverConfig;
   
 
   export default {
     components: {
       [NavBar.name]:NavBar,
       [AddressList.name]:AddressList,
+      [Toast.name]:Toast,
     },
     data () {
       
@@ -67,8 +76,7 @@
     },
 
     async beforeMount(){
-        let getAddress = await get.get_address();
-        console.log(getAddress)
+        let getAddress = await HttpGet.get_address();
         if(getAddress && getAddress.data){
            getAddress.data.forEach((e,i) => {
               let { addr_id,addr,name,tel,user_id,state } = e;
@@ -109,6 +117,27 @@
       onEdit(item, index) {
         let url = genQueryString('/mine/myaddressadd',{addressInfo:item})
         this.$router.push(url);
+
+      },
+      async onSelect(item, index){
+          let set_addr_default = await  HttpGet.set_addr_default({
+            addrid:item.addr_id,
+          })
+          if(set_addr_default && set_addr_default.errcode == 0){
+            Toast('默认地址切换成功')
+          }
+
+
+          this.list.map((e,i)=>{
+            if(i === index){
+              e.state = 1
+            }else{
+              e.state = 0
+
+            }
+            return e;
+          })
+
 
       }
 

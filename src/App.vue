@@ -7,12 +7,12 @@
     <router-view/>
   </div> -->
 
-   <div id="app">
+  <div id="app">
     <router-view />
   </div>
 </template>
 
-<style>
+<style lang='less'>
 body,html{
   background: #f2f2f2;
         font-size: 14px;
@@ -47,6 +47,16 @@ body,html{
     background-color:#b6271d !important;
     border:#b6271d !important;
   }
+
+  .loading{
+    margin-top:20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .loadin-text{
+        margin-left: 10px;
+    }
+}
 
 
 @keyframes show{

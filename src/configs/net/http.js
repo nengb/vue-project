@@ -36,14 +36,16 @@ function cryptoReq(json){
 async function getData(json){
 	let msg
 	return new Promise((resolve,reject)=>{
-		console.log(json)
+		// console.log(json)
 		if(!json.post){
 			json.post = {}
 		}
 		if(json.post.apiService == 'lottery'){
 			json.url = json.url.replace(httpAddress,`http://${ip}:9020`)
 		}
-		json.post.account='wx_o5_aPwQGiw67_1C-UAfBjvjLtL3g'
+		
+		!json.post.account?json.post.account=sessionStorage.account:null;
+		
 		$.ajax({
 			type: !ajaxType[json.type]?'get':json,
 			url: json.url,
@@ -52,13 +54,10 @@ async function getData(json){
 			async: true,
 			success: function(data) {
 				msg = data;
-				console.log(msg)
 				checkDataToken(msg)
 				resolve(msg)
 			},
 			error: function(data, status, e) {
-				console.log("获取数据出错" + e);
-				console.log(json)
 				// $toast.show('请求数据失败，请检查网络~', 1000)
 				  
 				resolve(null)
@@ -71,7 +70,6 @@ async function getData(json){
 async function postData(json){
 	let msg
 	return new Promise((resolve,reject)=>{
-		console.log(json)
 		$.ajax({
 			type: 'post',
 			url: json.url,
@@ -80,13 +78,10 @@ async function postData(json){
 			async: true,
 			success: function(data) {
 				msg = data;
-				console.log(msg)
 				checkDataToken(msg)
 				resolve(msg)
 			},
 			error: function(data, status, e) {
-				console.log("上传数据出错" + e);
-				console.log(json)
 				resolve(null)
 			},
 			timeout:5000
@@ -96,21 +91,16 @@ async function postData(json){
 //上传表单数据（可上传文件）
 async function postFormData(json){
 	return new Promise((resolve,reject)=>{
-		console.log(json)
 		var oReq = new XMLHttpRequest();
 		oReq.open("POST", json.url);
 		oReq.send(json.formData);
 		oReq.onreadystatechange = function () {
-			console.log(oReq)
 			if (oReq.readyState == 4) {
 				if(oReq.status == 200){
-					console.log("oReq.response")
-					console.log(oReq.response)
 					let data 
 					try {
 						data = JSON.parse(oReq.response)
 					} catch (error) {
-							console.error('数据解析出错')
 					}	
 	
 					checkDataToken(data)

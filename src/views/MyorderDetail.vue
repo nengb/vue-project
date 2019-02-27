@@ -1,6 +1,9 @@
 
 <template>
-  <div class="page has-navbar"   style='transition:none !important'>
+  <div
+    class="page has-navbar"
+    style="transition:none !important"
+  >
     <van-nav-bar
       title="我的订单"
       fixed
@@ -8,55 +11,81 @@
       left-arrow
       @click-left="onClickLeft"
     />
-    <div class="page-content text-center " >
-      <div class='myorderdetail'>
-        <div class="postInfo" @click="toMypost()">
+    <div class="page-content text-center ">
+      <div class="myorderdetail">
+        <div
+          class="postInfo"
+          @click="toMypost()"
+        >
           <div class="left">
-            <i class="location-icon"></i>
-            <div class="postBlock" >
-              <div class="postState"  :style="postState">{{post.state?post.state:'未发货'}} <span v-show="post.state">[点击查看物流]</span> </div>  
-              <div class="time">{{post.data && post.data[0]?post.data[0].ftime:''}}</div>  
+            <i class="location-icon" />
+            <div class="postBlock">
+              <div
+                class="postState"
+                :style="postState"
+              >
+                {{ post.state?post.state:'未发货' }} <span v-show="post.state">
+                  [点击查看物流]
+                </span>
+              </div>  
+              <div class="time">
+                {{ post.data && post.data[0]?post.data[0].ftime:'' }}
+              </div>  
             </div>
           </div>
-          <i class="arrow-right-icon"></i>
+          <i class="arrow-right-icon" />
         </div>
         <div class="addrInfo">
-          <i class="location-icon"></i>
+          <i class="location-icon" />
           <div class="addr-info">
-            <div class="name">收件人：{{addrInfo.name}} <span>{{addrInfo.tel}}</span></div>
-            <div class="address">收货地址{{addrInfo.addr}}</div>
+            <div class="name">
+              收件人：{{ addrInfo.name }} <span>{{ addrInfo.tel }}</span>
+            </div>
+            <div class="address">
+              收货地址{{ addrInfo.addr }}
+            </div>
           </div>
         </div>
 
         <div class="goodList">
-          <div class="goodListItem" v-for="item in orderInfo">
+          <div
+            v-for="(item,index) in orderInfo"
+            :key="index"
+            class="goodListItem"
+          >
             <div class="left">
-              <div class="goodImg"><img :src="item.img" alt="" width="100%" height="100%"></div>
-              <div class="goodName">{{item.name}}</div>
+              <div class="goodImg">
+                <img
+                  :src="item.img"
+                  alt=""
+                  width="100%"
+                  height="100%"
+                >
+              </div>
+              <div class="goodName">
+                {{ item.name }}
+              </div>
             </div>
-            <div class="goodNum">{{item.num}}个</div>
+            <div class="goodNum">
+              {{ item.num }}个
+            </div>
           </div>
         </div>
 
         <div class="orderInfo">
-          <div>订单编号：{{addrInfo.ord_id}}</div>
-          <div>订单时间：{{addrInfo.formatOrderTime}}</div>
-          <div>发货时间：{{addrInfo.formatTime}}</div>
+          <div>订单编号：{{ addrInfo.ord_id }}</div>
+          <div>订单时间：{{ addrInfo.formatOrderTime }}</div>
+          <div>发货时间：{{ addrInfo.formatTime }}</div>
         </div>
 
-        <div class="postExplain">
-
-        </div>
-
-
-
+        <div class="postExplain" />
       </div>
     </div>
   </div>
 </template>
 <script>
 
-  import get from '../services/get';
+  import HttpGet from '../services/get';
   import { NavBar, Toast  } from 'vant';
   import serverConfig from '../configs/serverConfig';
   let { genQueryString, getQueryStringArgsAes,formatTime } = serverConfig;
@@ -84,7 +113,7 @@
 
       let { orderid,formatOrderTime } = getQueryStringArgsAes()
       if(orderid){
-        let get_order_by_id =  await get.get_order_by_id({orderid});
+        let get_order_by_id =  await HttpGet.get_order_by_id({orderid});
         if(get_order_by_id && get_order_by_id.data){
           this.orderInfo = get_order_by_id.data.goods;
           get_order_by_id.data.info.formatTime = get_order_by_id.data.info.time?formatTime(new Date(get_order_by_id.data.info.time)):'暂无发货时间';
@@ -94,7 +123,7 @@
           this.addrInfo = get_order_by_id.data.info;
           this.postInfo = get_order_by_id.data.post;
           if(this.postInfo && this.postInfo.ord_id){
-            let get_post_info = await get.get_post_info({orderid:this.postInfo.ord_id})
+            let get_post_info = await HttpGet.get_post_info({orderid:this.postInfo.ord_id})
             if(get_post_info && get_post_info.data){
               this.post = get_post_info;
               if(get_post_info.state == '已签收'){

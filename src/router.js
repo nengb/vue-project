@@ -29,7 +29,7 @@ export default new Router({
     },
     {
       path: '/mine/myaddressadd',
-      name: 'myaddress',
+      name: 'myaddressadd',
       component: () => import('./views/MyaddressAdd.vue')
     },
     {
@@ -57,12 +57,18 @@ export default new Router({
       name: 'myscore',
       component: () => import('./views/Myscore.vue')
     },
+    {
+      path: '/mine/score_to_good',
+      name: 'score_to_good',
+      component: () => import('./views/MyScoreToGood.vue')
+    },
     
     {
       path: '/customer',
       name: 'customer',
       component: () => import('./views/Customer.vue')
     },
+    
     {
       path: '/message',
       name: 'message',
@@ -73,6 +79,12 @@ export default new Router({
       name: 'mybag',
       component: () => import('./views/Mybag.vue')
     },
+    {
+      path: '/myredpacket',
+      name: 'myredpacket',
+      component: () => import('./views/MyRedPacket.vue')
+    },
+
 
     
     
