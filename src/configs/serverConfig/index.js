@@ -2,17 +2,22 @@
 class ServerConfig{
     constructor(){
         //连接服务器的请求地址
-        let ip = '47.97.32.55' ;	 //测试服务器
-         ip = '118.178.178.152' ;	 //口红
-         ip = '47.110.65.173' ;	 //商城
+        // let ip = '47.97.32.55' ;	 //测试服务器
+        //  ip = '118.178.178.152' ;	 //口红
+        //  ip = '47.110.65.173' ;	 //商城
+        // this.ip = process.env.NODE_ENV == 'production'?window.location.hostname:ip;  //从浏览器拿ip
+        // this.ip = '118.178.178.152';  //从浏览器拿ip
 
-        this.ip = process.env.NODE_ENV == 'production'?window.location.hostname:ip;  //从浏览器拿ip
-
-        this.ip = '118.178.178.152';  //从浏览器拿ip
+        this.ip='115.451.15.154';  //假ip地址
 
         this.loca_key = '!@$%&S&@'
-
+        
         this.httpAddress=`http://${this.ip}:9001`
+
+        //使用mock模拟数据
+        // this.httpAddress = 'mock'
+
+
         //socket
         this.socketAddress = `${this.ip}:10000`
         this.imgAddress = `http://${this.ip}/web_h5/dist/img_aiqu_pink`

@@ -141,7 +141,7 @@
 
       this.loadingIcon = true;
 
-      let get_my_wawa = await HttpGet.get_my_wawa({game_type:14});
+      let get_my_wawa = await HttpGet.get_my_wawa({game_type:17});
       if(get_my_wawa && get_my_wawa.data){
         this.shopList = get_my_wawa.data;
       }

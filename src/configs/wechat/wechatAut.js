@@ -3,7 +3,7 @@ import serverConfig from '../serverConfig';
 // eslint-disable-next-line
 let { ip, httpAddress, socketAddress, imgAddress, getHrefNew, getQueryString,location,href,getHashSearch,getQueryStringArgs } = serverConfig;
 import http from '../net/http';
-import get from '../../services/get';
+import HttpGet from '../../services/get';
 
 function isWeiXin() {
   let ua = window.navigator.userAgent.toLowerCase();
@@ -67,7 +67,8 @@ async function login(){
     
     if(account){
       sessionStorage.account = account;
-      loginHttp = await http.getData({url:`${httpAddress}/login`,post:{account}})
+      // loginHttp = await http.getData({url:`${httpAddress}/login`,post:{account}})
+      loginHttp = await HttpGet.login({url:`${httpAddress}/login`,post:{account}})
       if(loginHttp && loginHttp.constructor === Object){
         //最后更新时间
         loginHttp.data.alterTime = Date.now();

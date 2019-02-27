@@ -4,6 +4,7 @@
 //get请求
 export const get = {
 
+    login:'/login',                 
     index:'/index',                 
     
     get_lipstick_gift:'/get_lipstick_gift',                  

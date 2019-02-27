@@ -349,6 +349,7 @@
     },
     async mounted(){
 
+
       let user = wechat.getUserData();
       if(!user){
         this.checkUser = setInterval(() => {
@@ -368,8 +369,12 @@
 
     methods:{
         async initHomeData(){
+          console.log(21222)
           let getIndexData = await HttpGet.index({account:this.user.account});
+          console.log(getIndexData)
+
           if( getIndexData && getIndexData.data ){
+          console.log(123123)
 
             this.navArr = getIndexData.data.navArr;
             //请求所有分类数据
